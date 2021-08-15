@@ -5,6 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
+    enum PlayerCondition { Move, Stop, Jump }
+    PlayerCondition playerCondition = PlayerCondition.Stop;
+
     [Header("Player Property")]
     [SerializeField] private float playerSpeed;
     [SerializeField] private float playerJumpForce;
@@ -25,26 +28,34 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //ДЗ добавить enum
-        rb.velocity = new Vector2(currentPlayerSpeed*Time.deltaTime, rb.velocity.y);  
-        //rb.AddForce(new Vector2(currentPlayerSpeed, 0f), ForceMode2D.Force);
+        if (playerCondition == PlayerCondition.Move)
+        {
+            rb.velocity = new Vector2(currentPlayerSpeed * Time.fixedDeltaTime, rb.velocity.y);
+            //rb.AddForce(new Vector2(currentPlayerSpeed, 0f), ForceMode2D.Force);
+        }
+
+
     }
+
 
     public void RightMove()
     {
         currentPlayerSpeed = playerSpeed;
-        spriteRenderer.flipX = false; 
+        spriteRenderer.flipX = false;
+        playerCondition = PlayerCondition.Move;
     }
     public void LeftMove()
     {
         currentPlayerSpeed = -playerSpeed;
-        spriteRenderer.flipX = true;    
+        spriteRenderer.flipX = true;
+        playerCondition = PlayerCondition.Move;
     }
 
  
     public void StopMove()
     {
-        currentPlayerSpeed = 0f;
+        //currentPlayerSpeed = 0f;
+        playerCondition = PlayerCondition.Stop;
     }
     public void Jump()
     {
@@ -52,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
             groundCheck = false;
+            playerCondition = PlayerCondition.Jump;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
