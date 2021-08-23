@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerJumpForce;
 
     [SerializeField] private GameObject animObject;
+    private Animator animator;
 
     private SpriteRenderer spriteRenderer;
 
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = animObject.GetComponent<SpriteRenderer>();
+        animator = animObject.GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -33,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(currentPlayerSpeed * Time.fixedDeltaTime, rb.velocity.y);
             //rb.AddForce(new Vector2(currentPlayerSpeed, 0f), ForceMode2D.Force);
         }
-
+        animator.SetFloat("Speed", Mathf.Abs(currentPlayerSpeed));
 
     }
 
@@ -54,13 +56,15 @@ public class PlayerMovement : MonoBehaviour
  
     public void StopMove()
     {
-        //currentPlayerSpeed = 0f;
+        currentPlayerSpeed = 0f;
+        
         playerCondition = PlayerCondition.Stop;
     }
     public void Jump()
     {
         if (groundCheck)
         {
+            animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
             groundCheck = false;
             playerCondition = PlayerCondition.Jump;
