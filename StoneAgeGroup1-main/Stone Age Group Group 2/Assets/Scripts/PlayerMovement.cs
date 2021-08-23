@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private float currentPlayerSpeed;
     private Rigidbody2D rb;
     private bool groundCheck;
+    private float direction;
 
     private void Awake()
     {
@@ -32,23 +33,25 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerCondition == PlayerCondition.Move)
         {
-            rb.velocity = new Vector2(currentPlayerSpeed * Time.fixedDeltaTime, rb.velocity.y);
+            rb.velocity = new Vector2(playerSpeed * direction * Time.fixedDeltaTime, rb.velocity.y);
             //rb.AddForce(new Vector2(currentPlayerSpeed, 0f), ForceMode2D.Force);
         }
-        animator.SetFloat("Speed", Mathf.Abs(currentPlayerSpeed));
+        animator.SetFloat("Speed", Mathf.Abs(playerSpeed));
 
     }
 
 
     public void RightMove()
     {
-        currentPlayerSpeed = playerSpeed;
+        //currentPlayerSpeed = playerSpeed;
+        direction = 1f;
         spriteRenderer.flipX = false;
         playerCondition = PlayerCondition.Move;
     }
     public void LeftMove()
     {
-        currentPlayerSpeed = -playerSpeed;
+        //currentPlayerSpeed = -playerSpeed;
+        direction = -1f;
         spriteRenderer.flipX = true;
         playerCondition = PlayerCondition.Move;
     }
@@ -56,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
  
     public void StopMove()
     {
-        currentPlayerSpeed = 0f;
+        //currentPlayerSpeed = 0f;
         
         playerCondition = PlayerCondition.Stop;
     }
